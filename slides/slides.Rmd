@@ -1,0 +1,205 @@
+---
+title: "Computational Reproducibility and Good Graphics"
+author: "Heike Hofmann"
+ratio: 16x10
+output:
+  rmdshower::shower_presentation:
+    self_contained: false
+    katex: true
+    theme: ribbon
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+# Computational Reproducibility and Good Graphics
+
+
+## Science retracts gay marriage paper without agreement of lead author
+
+- May 2015: Science retracts paper of how canvassers can sway people's opinions about 
+gay marriage.
+- Science Editor-in-Chief: Original survey data not made available for independent
+reproduction of results + Survey incentives misrepresented + Sponsorship 
+statement false
+- Two Berkeley grad students attempted to replicate the study and discovered that 
+the data must have been faked.
+- Outright fraud cannot be prevented by reproducibility methods, but the methods  make it easier to discover such issues.
+
+<small>
+Source: 
+http://news.sciencemag.org/policy/2015/05/science-retracts-gay-marriage-paper-without-lead-author-s-consent
+</small>
+
+
+## Seizure study retracted after authors realize data got "terribly mixed"
+
+From the authors of **Low Dose Lidocaine for Refractory Seizures in Preterm Neonates**:
+
+*"The article has been retracted at the request of the authors. After carefully 
+re-examining the data presented in the article, they identified that data of two 
+different hospitals got terribly mixed. The published results cannot be reproduced in
+accordance with scientific and clinical correctness."*
+
+<small>
+Source: http://retractionwatch.com/2013/02/01/seizure-study-retracted-after-authors-realize-data-got-terribly-mixed/
+</small>
+
+
+## Bad spreadsheet merge kills depression paper, quick fix resurrects it
+
+- The authors informed the journal that the merge of lab results and other survey 
+data used in the paper resulted in an error regarding the identification codes.
+- **Original conclusion:** Lower levels of CSF IL-6 were associated with current 
+depression and with future depression [...].
+- **Revised conclusion:** Higher levels of CSF IL-6 and IL-8 were associated with 
+current depression [...].
+
+<small>
+Source: 
+http://retractionwatch.com/2014/07/01/bad-spreadsheet-merge-kills-depression-paper-quick-fix-resurrects-it/
+</small>
+
+## Keith Baggerly: Founder of "Bioinformatic Forensics"
+
+- Start of the so-called *Potti retractions*: http://videolectures.net/cancerbioinformatics2010_baggerly_irrh/
+- by now Anil Potti was forced to retract four papers
+- Five cancer drug studies exhibited "several simple errors" [Annals of Applied Statistics 2009](http://projecteuclid.org/euclid.aoas/1267453942) (mislabeling, row/column offsets) to the point that the exact opposite drug was given to participants resulting in likely avoidable deaths.
+
+# What can/should we do?
+
+## Four facets of reproducibility
+
+1. **Documentation:** avoid binary files (e.g. docx) and use text files for documentation
+    - Use markdown to document our workflow so that anyone can pick up our
+    data and follow what we are doing
+    - Use literate programming so that our analysis and our results are
+    tightly connected, or better yet, unseparable
+2. **Organization:** tools to organize our projects so that we don't have a single folder with hundreds of files
+3. **Automation:** the power of scripting to create automated data analyses
+4. **Dissemination:** publishing is not the end of our analysis, rather it is a way 
+station towards  future research and the future research of others
+
+## A bit about me
+
+
+- Professor in Statistics (at ISU since 2002)
+- research area: Statistical Computing and Data Visualization
+- former graduate students: Hadley Wickham (ggplot2, tidyverse) and Yihui Xie (knitr, RMarkdown) both work for RStudio now
+- my tools: R and RStudio
+
+## Why R? -- R is ...
+
+* __Free__ to use
+* __Extensible__: Over 10,000 user contributed add-on packages currently on CRAN!
+* __Powerful__: With the right tools, get more work done, faster.
+* __Flexible__: Not a question of _can_, but _how_.
+* __Frustrating__: Flexibility comes at a cost (easy to shoot yourself in the foot!).
+
+```{r}
+pkgs <- available.packages(contriburl = 
+                      contrib.url("https://cran.rstudio.com/", 
+                                      type = "both"))
+nrow(pkgs)
+```
+
+## RStudio is ... {.black}
+
+[From Julie Lowndes](http://jules32.github.io/resources/RStudio_intro/):  
+
+<img class="cover" src="images/airport-light.png" alt="">
+
+<blockquote>
+<p style="color:white"><b>If R were an airplane, RStudio would be the airport</b>, providing many, many supporting services that make it easier for you, the pilot, to take off and go to awesome places. Sure, you can fly an airplane without an airport, but having those runways and supporting infrastructure is a game-changer.</p>
+</blockquote>
+
+## The RStudio IDE
+
+<img class="cover" src="images/rstudio-panes.png" alt="">
+
+## The RStudio IDE
+
+
+1. **Source editor:** Docking station for multiple files, Useful shortcuts ("Knit"), Highlighting/Tab-completion, Code-checking (R, HTML, JS), Debugging features  
+2. **Console window:** Highlighting/Tab-completion, Search recent commands
+3. **Environment pane:** Tools for package development, git, etc
+4. **Other tabs/panes:** Graphics, R documentation, File system navigation/access
+
+<br>
+<br>
+<p class = "note">
+*Protip:* save yourself the headaches figuring out file paths and instead work in an RStudio R project (popup menu at the top left)
+</p>
+
+## Markdown
+
+- Markdown is a particular type of **markup** language.
+- Markup languages are designed to **produce documents from plain text**.
+- Some of you may be familiar with **LaTeX**. This is another (less human friendly) markup language for creating pdf documents.
+- LaTeX gives you much greater control, but it is restricted to pdf and has a much greater learning curve.
+- **Markdown** is becoming a **standard**. Many websites will generate HTML from Markdown (e.g. GitHub, Stack Overflow, reddit, ...).
+
+## Markdown is easy
+
+```
+*italic*
+**bold**
+
+# Header 1
+## Header 2
+### Header 3
+
+- List item 1
+- List item 2
+    - item 2a
+    - item 2b
+
+1. Numbered list item 1
+1. Numbered list item 2
+    - item 2a
+    - item 2b
+```
+
+
+Have a look at RStudio's [RMarkdown cheat sheet](https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf)
+
+## What is RMarkdown?
+
+- ... an authoring format that enables easy creation of dynamic documents, presentations, and reports from R. 
+- it combines the core syntax of markdown with embedded R code chunks that are run so their output can be included in the final document.
+- R Markdown documents are fully reproducible (they are automatically regenerated whenever underlying R code or data changes).
+
+## {.white}
+
+<img class="cover" src="images/rmarkdown.png" alt="">
+
+
+## Why R Markdown?
+
+- **It's simple.** Focus on writing, rather than debugging silly errors.
+- **It's flexible.** Markdown was created to simplify writing HTML, but thanks to pandoc, Markdown converts to many different formats!
+- **It's dynamic.** Find a critical error? Get a new dataset? Regenerate your report without copy/paste hell!
+- **Encourages transparency.** Collaborators (including your future self) will thank you for integrating your analysis & report.
+- **Enables interactivity/reactivity.** Allow your audience to explore the analysis (rather than passively read it).
+
+## {.white}
+
+<img class="cover" src="images/hello-rmarkdown.png" alt="">
+
+
+
+## Your Turn (5 min) {.white}
+
+<img class="cover" src="images/yourturn.jpg" alt="">
+
+
+
+1. <span style="color:white">Open RStudio, create a new project.</span>
+2. <span style="color:white">Create a new RMarkdown file and knit it.</span>
+3. <span style="color:white">Navigate to the RMarkdown cheat sheet and download a copy (Google for the link!)</span>
+3. <span style="color:white">Make changes to the markdown formatting and knit again.</span>
+4. <span style="color:white">Export output to different files.</span>
+5. <span style="color:white">If you feel adventurous, change some of the R code and knit again.</span>
+
+
