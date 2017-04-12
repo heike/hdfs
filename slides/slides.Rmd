@@ -1,5 +1,5 @@
 ---
-title: "Computational Reproducibility and Good Graphics"
+title: "Computational Reproducibility: tools and a case study"
 author: "Heike Hofmann"
 ratio: 16x10
 output:
