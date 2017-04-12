@@ -373,3 +373,6 @@ occ3 %>% filter(Area.name == State) %>% ggplot() +
 - the Census Bureau's dedication to preserving the historical data and charts make a reproduction possible
 - most charts created today do not have the same commitment to historical preservation
 - today's tools make it easier to reproduce results (not for 150 years, but for at least 5-10 years)
+<br>
+<br>
+- material to re-produce these slides available on [github]().
