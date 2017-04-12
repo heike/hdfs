@@ -68,7 +68,7 @@
 <h2>Science retracts gay marriage paper without agreement of lead author</h2>
 <ul>
 <li>May 2015: Science retracts paper of how canvassers can sway people’s opinions about gay marriage.</li>
-<li>Science Editor-in-Chief: Original survey data not made available for independent reproduction of results + Survey incentives misrepresented + Sponsorship statement false</li>
+<li>Science Editor-in-Chief: (1) Original survey data not made available for independent reproduction of results (2) Survey incentives misrepresented (3) Sponsorship statement false</li>
 <li>Two Berkeley grad students attempted to replicate the study and discovered that the data must have been faked.</li>
 <li>Outright fraud cannot be prevented by reproducibility methods, but the methods make it easier to discover such issues.</li>
 </ul>
@@ -127,7 +127,7 @@
                       <span class="kw">contrib.url</span>(<span class="st">&quot;https://cran.rstudio.com/&quot;</span>, 
                                       <span class="dt">type =</span> <span class="st">&quot;both&quot;</span>))
 <span class="kw">nrow</span>(pkgs)</code></pre></div>
-<pre><code>## [1] 10350</code></pre>
+<pre><code>## [1] 10352</code></pre>
 </section><section id="rstudio-is" class="slide level2 black">
 <h2>RStudio is …</h2>
 <p><a href="http://jules32.github.io/resources/RStudio_intro/">From Julie Lowndes</a>:</p>
@@ -188,9 +188,6 @@
 <li>it combines the core syntax of markdown with embedded R code chunks that are run so their output can be included in the final document.</li>
 <li>R Markdown documents are fully reproducible (they are automatically regenerated whenever underlying R code or data changes).</li>
 </ul>
-</section><section id="section" class="slide level2 white">
-<h2></h2>
-<p><img class="cover" src="images/rmarkdown.png" alt=""></p>
 </section><section id="why-r-markdown" class="slide level2">
 <h2>Why R Markdown?</h2>
 <ul>
@@ -200,6 +197,9 @@
 <li><strong>Encourages transparency.</strong> Collaborators (including your future self) will thank you for integrating your analysis &amp; report.</li>
 <li><strong>Enables interactivity/reactivity.</strong> Allow your audience to explore the analysis (rather than passively read it).</li>
 </ul>
+</section><section id="section" class="slide level2 white">
+<h2></h2>
+<p><img class="cover" src="images/rmarkdown.png" alt=""></p>
 </section><section id="section-1" class="slide level2 white">
 <h2></h2>
 <p><img class="cover" src="images/hello-rmarkdown.png" alt=""></p>
@@ -211,9 +211,127 @@
 <li><span style="color:white">Create a new RMarkdown file and knit it.</span></li>
 <li><span style="color:white">Navigate to the RMarkdown cheat sheet and download a copy (Google for the link!)</span></li>
 <li><span style="color:white">Make changes to the markdown formatting and knit again.</span></li>
-<li><span style="color:white">Export output to different files.</span></li>
+<li><span style="color:white">Export to a different file format.</span></li>
 <li><span style="color:white">If you feel adventurous, change some of the R code and knit again.</span></li>
 </ol>
+</section><section id="using-stata" class="slide level2">
+<h2>Using Stata</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">require</span>(knitr)
+statapath &lt;-<span class="st"> </span>
+<span class="st">  &quot;/Applications/Stata/StataSE.app/Contents/MacOS/stata-se&quot;</span>
+<span class="co"># for Windows:</span>
+<span class="co"># statapath &lt;- &quot;C:/Program Files (x86)/Stata14/StataSE-64.exe&quot;</span>
+
+opts_chunk$<span class="kw">set</span>(<span class="dt">engine=</span><span class="st">&quot;stata&quot;</span>, <span class="dt">engine.path=</span>statapath, <span class="dt">comment=</span><span class="st">&quot;&quot;</span>)</code></pre></div>
+<h3 id="descriptive-statistics">Descriptive Statistics</h3>
+<p>A simple example:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sysuse auto
+summarize</code></pre></div>
+</section><section id="computational-reproducibility-a-case-study" class="slide level2">
+<h2>Computational Reproducibility: a case study</h2>
+<ul>
+<li>Visual representations of the decennial census starting with 1870 (ceased after 1920, revived for 2000)</li>
+<li>each Atlas is compendium of about 100 lithographic plates (format is 2 x 3 ft, some charts are double pages)</li>
+<li>huge technical feat: data collection, data aggregation, visualization and print technology</li>
+<li>unique insight into life in the United States</li>
+<li>also unique insight into statistical graphics</li>
+<li>made available through Library of Congress <a href="https://www.loc.gov/resource/g3701gm.gct00008/?st=gallery" class="uri">https://www.loc.gov/resource/g3701gm.gct00008/?st=gallery</a></li>
+</ul>
+</section><section id="plate-32" class="slide level2">
+<h2>Plate #32</h2>
+<p><img src="images/occupations-us.png" width = 300> <img src="images/legend.png" width = 250></p>
+<ul>
+<li><em>Gainful</em> occupation or going to school</li>
+<li>Inner square is a mosaicplot (at the time a novel visualization)</li>
+<li>What proportion of the population is unaccounted for?</li>
+</ul>
+</section><section id="data-infrastructure" class="slide level2">
+<h2>Data infrastructure</h2>
+<blockquote>
+<p>
+An article about computational science in a scientific publication is not the scholarship itself, it is merely advertising of the scholarship. The actual scholarship is the complete software development environment and the complete set of instructions which generated the figures.
+</p>
+</blockquote>
+<p>Buckheit &amp; Donoho (1995)</p>
+<ul>
+<li><a href="https://data2.nhgis.org/main">NHGIS</a> (National Historical Geographical Information system): aggregates of Census data at different geographic levels</li>
+<li><a href="https://usa.ipums.org/usa-action/variables/group">IPUMS-USA</a>: U.S. Census and American Community Survey microdata from 1850 to the present</li>
+</ul>
+</section><section id="nhgis-extract" class="slide level2">
+<h2>NHGIS extract</h2>
+<pre><code>Table 5:     Employed Population by Occupation by Age by Sex
+Universe:    Employed Persons
+Source code: NT13
+NHGIS code:  ALL</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nhgis &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;../data/nhgis-iowa.csv&quot;</span>)
+<span class="kw">head</span>(nhgis[,<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">2</span>)], <span class="dv">10</span>)</code></pre></div>
+<pre><code>##     GISJOIN   G190                               GIS.Join.Match.Code
+## 1      YEAR   1870                                    Data File Year
+## 2     STATE   Iowa                                        State Name
+## 3    STATEA    190                                        State Code
+## 4  AREANAME   Iowa                                         Area name
+## 5    ALL001  11243      Agriculture &gt;&gt; 10 to 15 years of age &gt;&gt; Male
+## 6    ALL002     26    Agriculture &gt;&gt; 10 to 15 years of age &gt;&gt; Female
+## 7    ALL003 187264      Agriculture &gt;&gt; 16 to 59 years of age &gt;&gt; Male
+## 8    ALL004    274    Agriculture &gt;&gt; 16 to 59 years of age &gt;&gt; Female
+## 9    ALL005  11400   Agriculture &gt;&gt; 60 years of age and over &gt;&gt; Male
+## 10   ALL006     56 Agriculture &gt;&gt; 60 years of age and over &gt;&gt; Female</code></pre>
+</section><section id="ipums-extract" class="slide level2">
+<h2>IPUMS extract</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">iowa &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;../data/ipums-iowa.csv&quot;</span>)
+<span class="kw">head</span>(iowa)</code></pre></div>
+<pre><code>##   YEAR  SERIAL STATEICP STATEFIP URBAN PERNUM    SEX AGE BIRTHYR  RACE
+## 1 1870 2001101     Iowa       19 Rural      1   Male  26    1844 White
+## 2 1870 2001101     Iowa       19 Rural      2 Female  20    1850 White
+## 3 1870 2001101     Iowa       19 Rural      3   Male   1    1869 White
+## 4 1870 2001101     Iowa       19 Rural      4   Male   0    1870 White
+## 5 1870 2001201     Iowa       19 Rural      1   Male  21    1849 White
+## 6 1870 2001201     Iowa       19 Rural      2 Female  18    1852 White
+##                                NATIVITY CITIZEN SCHOOL LIT BLIND NAMELAST
+## 1 Native born, both parents native born       2      1   4    No   ROMANS
+## 2 Native born, both parents native born       0      1   4    No   ROMANS
+## 3 Native born, both parents native born       0      1   0    No   ROMANS
+## 4 Native born, both parents native born       0      1   0    No   ROMANS
+## 5 Native born, both parents native born       2      1   4    No   DEATON
+## 6 Native born, both parents native born       0      1   4    No   DEATON
+##   NAMEFRST
+## 1  FRELAND
+## 2      ANN
+## 3  WILLIAM
+## 4 THEODORE
+## 5  CLAYTON
+## 6    SARAH</code></pre>
+</section><section id="old-and-new---side-by-side" class="slide level2">
+<h2>Old and new - side by side</h2>
+<div class="double">
+<p class="double-flow">
+<img src="images/occupations-us.png" width = 250>
+</p>
+<p class="double-flow">
+<img src="slides_files/figure-revealjs/us-repro-1.png" width = 500>
+</p>
+</div>
+<ul>
+<li>visually size of rectangles seem to coincide</li>
+<li>better: use digitized picture as data source</li>
+</ul>
+</section><section id="digitized-and-estimated-values" class="slide level2">
+<h2>Digitized and Estimated Values</h2>
+<p><img src="slides_files/figure-revealjs/unnamed-chunk-6-1.png" width="768" /></p>
+</section><section id="really-new-plot" class="slide level2">
+<h2>Really new plot</h2>
+<p><img src="slides_files/figure-revealjs/us-repro-with-1.png" width="768" /></p>
+<ul>
+<li>about 30% of the population over ten is not accounted for</li>
+<li>97% of them are girls and women!</li>
+</ul>
+</section><section id="conclusions" class="slide level2">
+<h2>Conclusions</h2>
+<ul>
+<li>the Census Bureau’s dedication to preserving the historical data and charts make a reproduction possible</li>
+<li>most charts created today do not have the same commitment to historical preservation</li>
+<li>today’s tools make it easier to reproduce results (not for 150 years, but for at least 5-10 years)</li>
+</ul>
 </section>
 
   <!--

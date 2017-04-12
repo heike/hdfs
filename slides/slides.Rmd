@@ -20,8 +20,8 @@ library(tidyverse)
 
 - May 2015: Science retracts paper of how canvassers can sway people's opinions about 
 gay marriage.
-- Science Editor-in-Chief: Original survey data not made available for independent
-reproduction of results + Survey incentives misrepresented + Sponsorship 
+- Science Editor-in-Chief: (1) Original survey data not made available for independent
+reproduction of results (2) Survey incentives misrepresented  (3) Sponsorship 
 statement false
 - Two Berkeley grad students attempted to replicate the study and discovered that 
 the data must have been faked.
@@ -170,9 +170,6 @@ Have a look at RStudio's [RMarkdown cheat sheet](https://www.rstudio.com/wp-cont
 - it combines the core syntax of markdown with embedded R code chunks that are run so their output can be included in the final document.
 - R Markdown documents are fully reproducible (they are automatically regenerated whenever underlying R code or data changes).
 
-## {.white}
-
-<img class="cover" src="images/rmarkdown.png" alt="">
 
 
 ## Why R Markdown?
@@ -182,6 +179,10 @@ Have a look at RStudio's [RMarkdown cheat sheet](https://www.rstudio.com/wp-cont
 - **It's dynamic.** Find a critical error? Get a new dataset? Regenerate your report without copy/paste hell!
 - **Encourages transparency.** Collaborators (including your future self) will thank you for integrating your analysis & report.
 - **Enables interactivity/reactivity.** Allow your audience to explore the analysis (rather than passively read it).
+
+## {.white}
+
+<img class="cover" src="images/rmarkdown.png" alt="">
 
 ## {.white}
 
@@ -199,7 +200,176 @@ Have a look at RStudio's [RMarkdown cheat sheet](https://www.rstudio.com/wp-cont
 2. <span style="color:white">Create a new RMarkdown file and knit it.</span>
 3. <span style="color:white">Navigate to the RMarkdown cheat sheet and download a copy (Google for the link!)</span>
 3. <span style="color:white">Make changes to the markdown formatting and knit again.</span>
-4. <span style="color:white">Export output to different files.</span>
+4. <span style="color:white">Export to a different file format.</span>
 5. <span style="color:white">If you feel adventurous, change some of the R code and knit again.</span>
 
+## Using Stata
 
+```{r, echo=TRUE, message=FALSE, eval = FALSE}
+require(knitr)
+statapath <- 
+  "/Applications/Stata/StataSE.app/Contents/MacOS/stata-se"
+# for Windows:
+# statapath <- "C:/Program Files (x86)/Stata14/StataSE-64.exe"
+
+opts_chunk$set(engine="stata", engine.path=statapath, comment="")
+```
+
+### Descriptive Statistics
+
+A simple example:
+
+```{r, eval = FALSE}
+sysuse auto
+summarize
+```
+
+## Computational Reproducibility: a case study
+
+- Visual representations of the decennial census starting with 1870 (ceased after 1920, revived for 2000)
+- each Atlas is compendium of about 100 lithographic plates (format is 2 x 3 ft, some charts are double pages)
+- huge technical feat: data collection, data aggregation, visualization and print technology
+- unique insight into life in the United States 
+- also unique insight into statistical graphics
+- made available through Library of Congress https://www.loc.gov/resource/g3701gm.gct00008/?st=gallery
+
+## Plate #32 
+
+<img src="images/occupations-us.png" width = 300>
+<img src="images/legend.png" width = 250>
+
+- *Gainful* occupation or going to school
+- Inner square is a mosaicplot (at the time a novel visualization)
+- What proportion of the population is unaccounted for?
+
+## Data infrastructure
+
+<blockquote>
+<p>An article about computational science in a scientific publication is not the scholarship itself, it is merely advertising of the scholarship. The actual scholarship is the complete software development environment and the complete set of instructions which generated the figures.
+</p>
+</blockquote>
+Buckheit & Donoho (1995)
+
+- [NHGIS](https://data2.nhgis.org/main) (National Historical Geographical Information system): aggregates of Census data at different geographic levels
+- [IPUMS-USA](https://usa.ipums.org/usa-action/variables/group): U.S. Census and American Community Survey microdata from 1850 to the present
+
+## NHGIS extract
+
+```
+Table 5:     Employed Population by Occupation by Age by Sex
+Universe:    Employed Persons
+Source code: NT13
+NHGIS code:  ALL
+```
+
+```{r}
+nhgis <- read.csv("../data/nhgis-iowa.csv")
+head(nhgis[,c(1,3,2)], 10)
+```
+
+## IPUMS extract
+
+```{r, warning=FALSE, message=FALSE}
+iowa <- read.csv("../data/ipums-iowa.csv")
+head(iowa)
+```
+
+
+## Old and new - side by side
+
+<div class="double">
+<p class="double-flow">
+<img src="images/occupations-us.png" width = 250>
+</p><p class="double-flow">
+<img src="slides_files/figure-revealjs/us-repro-1.png" width = 500>
+</p>
+</div>
+
+- visually size of rectangles seem to coincide
+- better: use digitized picture as data source
+
+```{r us-repro, include=FALSE, echo = FALSE, warning = FALSE, message=FALSE}
+occ2 <- read.csv("../data/occ2.csv")
+occ2 <- occ2 %>% mutate(
+  Occupation = factor(Occupation, levels =
+                        c("Agriculture", "Manufacturing",
+                          "Trade", "Service", "School")),
+  Gender = factor(Gender, levels = c("Male", "Female")),
+  State = as.character(State),
+  Area.Name = as.character(Area.Name)
+)
+
+cols <- c("#333300", "#000066", "#cc9900", "#202060", "#86742d")
+library(ggmosaic)
+occ2 %>% filter(State==Area.Name) %>% ggplot() +
+  geom_mosaic(aes(x = product(Gender, Occupation),
+                  fill=Occupation, alpha = Gender, weight = Number),
+              offset = 0.005) +
+  scale_fill_manual(values=cols) + theme_bw() +
+  scale_alpha_manual(values=c(0.8,1)) +
+  theme(legend.position = "top",
+        legend.box = "vertical") +
+  coord_equal() +
+    theme(axis.line=element_blank(), axis.text=element_blank(),
+        axis.title.y = element_blank(), axis.ticks = element_blank()) +
+  xlab("The United States")
+```
+
+## Digitized and Estimated Values
+
+
+```{r echo=FALSE, width=8, height = 5, warning = FALSE}
+px2 <- read.csv("../data/px2.csv")
+seframe = data.frame(x =seq(0,50))
+seframe$p <- with(seframe, (x+3)/(100+3))
+seframe$se <- with(seframe, sqrt(p*(1-p))*10)
+
+sepolygon <- with(seframe, data.frame(x = c(x, rev(x)), y = c(x-1.96*se, rev(x+1.96*se))))
+
+
+px2 %>%
+  ggplot(aes(x = PixPercent, y = CensusPercent)) +
+  geom_polygon(aes(x = x, y = y), fill="steelblue",
+               alpha = 0.5, data = sepolygon) +
+  geom_abline(colour="grey60") + geom_point() +
+  facet_wrap(~Occupation) + theme_bw() +
+  xlab("Percentages of occupation based on measurements in Plate #32") +
+  ylab("Percentages based on Census Estimates") + 
+  coord_equal()
+```
+
+## Really new plot
+
+```{r us-repro-with, echo = FALSE, warning = FALSE, message=FALSE, fig.height=4.5}
+occ3 <- read.csv("../data/occ3.csv")
+occ3 <- occ3 %>% mutate(
+  Occupation = factor(Occupation, levels =
+                        c("Agriculture", "Manufacturing",
+                          "Trade", "Service", "School", "Unaccounted")),
+  Sex = factor(Sex, levels = c("Male", "Female")),
+  State = as.character(State),
+  Area.name = as.character(Area.name)
+)
+
+cols <- c("#333300", "#000066", "#cc9900", "#202060", "#86742d", "grey40")
+occ3 %>% filter(Area.name == State) %>% ggplot() +
+  geom_mosaic(aes(x = product(Sex, Occupation),
+                  fill = Occupation, alpha = Sex, weight = Number),
+              offset = 0.005) +
+  scale_fill_manual(values = cols) + theme_bw() +
+  scale_alpha_manual(values = c(0.8,1)) +
+  theme(legend.position = "top", legend.box = "vertical") +
+  coord_equal() +
+    theme(axis.line = element_blank(), axis.text = element_blank(),
+        axis.title.y = element_blank(), axis.ticks = element_blank()) +
+  xlab("The United States")
+```
+
+- about 30% of the population over ten is not accounted for
+- 97% of them are girls and women!
+
+## Conclusions
+
+- the Census Bureau's dedication to preserving the historical data and charts make a reproduction possible
+- most charts created today do not have the same commitment to historical preservation
+- today's tools make it easier to reproduce results (not for 150 years, but for at least 5-10 years)
