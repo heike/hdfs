@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
 
-# Computational Reproducibility and Good Graphics
+# Computational Reproducibility: tools and a case study
 
 
 ## Science retracts gay marriage paper without agreement of lead author
